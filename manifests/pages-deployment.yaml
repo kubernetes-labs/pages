@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: pages
+    tier: service
   name: pages
   namespace: namespace
 spec:
@@ -10,14 +11,31 @@ spec:
   selector:
     matchLabels:
       app: pages
+      tier: service
   strategy: {}
   template:
     metadata:
       labels:
         app: pages
+        tier: service
     spec:
       containers:
-        - image: adityapratapbhuyan/pages:1.0
+        - image: dellcloud/pages:service
           name: pages
           ports:
             - containerPort: 8080
+          env:
+            - name: PAGE_CONTENT
+              valueFrom:
+                configMapKeyRef:
+                  name: pages
+                  key: PAGE_CONTENT
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql/pages?allowPublicKeyRetrieval=true&useSSL=false
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: password
