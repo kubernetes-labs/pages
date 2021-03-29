@@ -20,7 +20,7 @@ spec:
         tier: service
     spec:
       containers:
-        - image: dellcloud/pages:monitor
+        - image: dellcloud/pages:distributed
           name: pages
           imagePullPolicy: Always
           ports:
